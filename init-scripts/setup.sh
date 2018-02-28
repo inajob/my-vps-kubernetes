@@ -17,7 +17,7 @@ echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
 
 kubeadm init
 
-sed -i 's/\/usr\/bin\/kubelet/\/usr\/bin\/kubelet --fail-swap-on=false /' /etc/systemd/system/10-kubeadm.conf
+sed -i 's/\/usr\/bin\/kubelet/\/usr\/bin\/kubelet --fail-swap-on=false /' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 kubeadm reset
 
 systemctl daemon-reload
