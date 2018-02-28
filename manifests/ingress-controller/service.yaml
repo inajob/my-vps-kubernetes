@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginhttpx-health
+  namespace: kube-system
+spec:
+  selector:
+    k8s-app: nghttpx-ingress-lb
+  ports:
+  - protocol: TCP
+    port: 11249
+    targetPort: 11249
