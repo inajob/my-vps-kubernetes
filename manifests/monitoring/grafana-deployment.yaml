@@ -13,16 +13,14 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: grafana/grafana:4.5.2
+        image: grafana/grafana:5.2.4
         ports:
           - containerPort: 3000
             protocol: TCP
         volumeMounts:
-        - mountPath: /var
+        - mountPath: /var/lib/grafana
           name: grafana-storage
         env:
-        - name: INFLUXDB_HOST
-          value: monitoring-influxdb
         - name: GRAFANA_PORT
           value: "3000"
           # The following env variables are required to make Grafana accessible via

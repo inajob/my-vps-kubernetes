@@ -57,9 +57,13 @@ spec:
       serviceAccountName: prometheus
       containers:
       - name: prometheus
-        image: prom/prometheus:v2.0.0
+        image: prom/prometheus:v2.4.2
         args:
         - --config.file=/mnt/etc/prometheus.yml
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
         ports:
         - containerPort: 9090
         volumeMounts:
