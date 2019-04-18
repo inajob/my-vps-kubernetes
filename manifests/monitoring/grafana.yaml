@@ -1,7 +1,7 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: monitoring-grafana
+  name: grafana
   namespace: kube-system
 spec:
   replicas: 1
@@ -13,20 +13,19 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: grafana/grafana:5.2.4
+        image: grafana/grafana:5.4.0 # 4.5.2
         ports:
           - containerPort: 3000
             protocol: TCP
         volumeMounts:
         - mountPath: /var/lib/grafana
           name: grafana-storage
+        envFrom:
+          - secretRef: # setting from Secret
+              name: grafana
         env:
         - name: GRAFANA_PORT
           value: "3000"
-          # The following env variables are required to make Grafana accessible via
-          # the kubernetes api-server proxy. On production clusters, we recommend
-          # removing these env variables, setup auth for grafana, and expose the grafana
-          # service using a LoadBalancer or a public IP.
         - name: GF_AUTH_BASIC_ENABLED
           value: "false"
         - name: GF_AUTH_ANONYMOUS_ENABLED
@@ -34,10 +33,21 @@ spec:
         - name: GF_AUTH_ANONYMOUS_ORG_ROLE
           value: Admin
         - name: GF_SERVER_ROOT_URL
-          # If you're only using the API Server proxy, set this value instead:
-          # value: /api/v1/proxy/namespaces/kube-system/services/monitoring-grafana/
           value: /
       volumes:
       - name: grafana-storage
         emptyDir: {}
       dnsPolicy: ClusterFirst
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: kube-system
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    k8s-app: grafana
+  type: NodePort

@@ -6,10 +6,10 @@ data:
         health
         kubernetes cluster.local 10.96.0.0/12 {
            pods insecure
-           upstream /etc/resolv.conf
+           upstream 8.8.8.8 8.8.4.4
         }
         prometheus :9153
-        proxy . /etc/resolv.conf
+        proxy . 8.8.8.8 8.8.4.4
         cache 30
     }
 kind: ConfigMap
